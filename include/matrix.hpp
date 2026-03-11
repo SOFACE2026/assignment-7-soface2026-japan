@@ -19,6 +19,10 @@ public:
     // multiply elements with a constant factor on the calling thread
     void multiply_single_threaded(T factor)
     {
+        for (auto &it = this->data.begin(); it != this->data.end(); ++it) // loop through all elements in the data vector
+        {
+            *it *= factor; //multiply with the factor and update the value in place
+        }
     }
 
     // split the matrix in n parts and use multiple spawn one thread per paSrtition to perform the multiplication.
@@ -56,8 +60,8 @@ public:
         std::vector<std::thread> workers;
         for (auto &t : slices)
         {
-            // IMPLEMENT THIS
-            // spawn new thread for each partition, to carry out the `multiply_slice` function.
+            //takes the function to execute and its arguments, and creates a new thread that runs the function with the arguments
+            workers.emplace_back(multiply_slice, factor, std::get<0>(t), std::get<1>(t)); 
         }
 
         // 3) It is important that the `iterators` vector used witin the thread is not freed prematurely
@@ -65,7 +69,7 @@ public:
         // this ensures that the full computation is done when this function returns
         for (auto &worker : workers)
         {
-            // IMPLEMENT THIS
+            worker.join();
         }
     }
 
@@ -127,7 +131,7 @@ private:
     {
         for (auto &it = begin; it != end; ++it)
         {
-            // IMPLEMENT THIS
+            *it *= factor; //multiply with the factor and update the value in place
         }
     }
 };
