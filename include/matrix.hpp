@@ -69,7 +69,7 @@ public:
         // this ensures that the full computation is done when this function returns
         for (auto &worker : workers)
         {
-            worker.join();
+            worker.join(); //join the thread again
         }
     }
 
